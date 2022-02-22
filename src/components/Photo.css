@@ -1,0 +1,7 @@
+.Photo{
+    width: 80vw;
+    height: calc((1080/1920)*80vw);
+    
+    background-image: url(../images/waldo_beach.jfif);
+    background-size: cover;
+}

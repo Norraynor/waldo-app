@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
+import Photo from "./components/Photo.js";
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 
@@ -22,7 +23,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         LMAO
-        <div className='img-container'>image goes here - with logic and stuff</div>
+        <div className='img-container'>
+          image goes here - with logic and stuff
+          <Photo />
+        </div>
       </header>
     </div>
   );
