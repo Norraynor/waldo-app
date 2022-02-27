@@ -1,7 +1,16 @@
 .Photo{
-    width: 80vw;
-    height: calc((1080/1920)*80vw);
+    width: 70vw;
+    height: calc((1080/1920)*70vw);
     
     background-image: url(../images/waldo_beach.jfif);
     background-size: cover;
+    position: relative;
+}
+.wally{
+    background-color: rgb(219, 35, 35,0.5);
+    position: absolute;
+    left: 820px;
+    top:290px;
+    width: 20px;
+    height: 40px;
 }

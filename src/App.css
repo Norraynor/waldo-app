@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+
+/**
+ * Radial cursor
+ */
+ #mouse-circle {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 1px solid #0f1c64;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10;
+}
