@@ -37,15 +37,18 @@
   }
 }
 
+:root{
+  --offset: 8px;
+}
 
 /**
  * Radial cursor
  */
  #mouse-circle {
   position: absolute;
-  width: 32px;
-  height: 32px;
-  margin: -16px 0 0 -16px;
+  width: calc(2*var(--offset));
+  height: calc(2*var(--offset));
+  margin: calc(-1*var(--offset)) 0 0 calc(-1*var(--offset));
   border: 1px solid #0f1c64;
   border-radius: 50%;
   pointer-events: none;

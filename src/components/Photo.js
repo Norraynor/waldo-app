@@ -17,11 +17,11 @@ function Photo(props) {
 
 
       //collision detection could be viable here https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection
-      collisionDetection();
+      collisionDetection(currentPosition);
     }
-    function collisionDetection(){
-      console.log(Math.round(props.mousePosX),Math.round(props.mousePosY));
-      if(props.mousePosX>wally.x && props.mousePosX<wally.x+wally.width && props.mousePosY>wally.y && props.mousePosY<wally.y+wally.height){
+    function collisionDetection(mousePos){
+      let offset = parseInt(window.getComputedStyle(document.querySelector(".App").parentElement).getPropertyValue('--offset').match(/\d/g).join(""));
+      if(mousePos[0]+offset>wally.x && mousePos[0]-offset<wally.x+wally.width && mousePos[1]+offset>wally.y && mousePos[1]-offset<wally.y+wally.height){
         //hit wally
         console.log("wally hit");
       }else{
