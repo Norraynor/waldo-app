@@ -58,7 +58,7 @@ function App() {
         LMAO
         <div className='img-container'>
           image goes here - with logic and stuff
-          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]}/>
+          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} firestore={firestore}/>
         </div>
       </header>
     </div>
