@@ -5,7 +5,7 @@ import Photo from "./components/Photo.js";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
-import {useCollectionData} from 'react-firebase-hooks/firestore';
+//import {useCollectionData} from 'react-firebase-hooks/firestore';
 
 firebase.initializeApp({
   apiKey: "AIzaSyC1TvsWFWP8R4zU5aT8KYG0gJxXlD5H6Ow",
@@ -45,8 +45,10 @@ function App() {
           revisedMousePosX += (mousePosX - revisedMousePosX) / delay;
           revisedMousePosY += (mousePosY - revisedMousePosY) / delay; 
 
-          mouseCircle.style.top = revisedMousePosY + 'px';
-          mouseCircle.style.left = revisedMousePosX + 'px';
+          if(mouseCircle){
+            mouseCircle.style.top = revisedMousePosY + 'px';
+            mouseCircle.style.left = revisedMousePosX + 'px';            
+          }
 
           setMousePos([revisedMousePosX,revisedMousePosY]);
         }
