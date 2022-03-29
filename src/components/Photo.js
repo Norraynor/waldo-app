@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import './Photo.css';
 
@@ -11,6 +12,26 @@ function Photo(props) {
   let wally;
   const wallyLocation = props.firestore.collection("location");
   const [location] = useCollectionData(wallyLocation);
+  const photo = useRef(null)
+
+  function photoVarsGet(){
+    console.log(photo.current);
+    let photoStyles = getComputedStyle(photo.current.querySelector(".wally"));
+    console.log(photoStyles);
+  }
+  function photoVarsSet(bool){
+    const wallySelector =  photo.current.querySelector(".wally");
+    if(bool){
+      wallySelector.style.setProperty('--top',`${wally.y}px`);
+      wallySelector.style.setProperty('--left',`${wally.x}px`);
+      wallySelector.style.setProperty('--width',`${wally.width}px`);
+      wallySelector.style.setProperty('--height',`${wally.height}px`);
+    }else{
+      wallySelector.style.setProperty('--top',`0px`);
+      wallySelector.style.setProperty('--left',`0px`);
+      wallySelector.style.setProperty('--width',`0px`);
+      wallySelector.style.setProperty('--height',`0px`);}
+  }
 
   function handleMouseClick(event){
     let rect = event.target.getBoundingClientRect();
@@ -35,12 +56,16 @@ function Photo(props) {
     if(mousePos[0]+offset>wally.x && mousePos[0]-offset<wally.x+wally.width && mousePos[1]+offset>wally.y && mousePos[1]-offset<wally.y+wally.height){
       //hit wally
       console.log("wally hit");
+      photoVarsSet(1);
+
     }else{
       console.log("missed");
+      photoVarsSet(0);
     }
+    photoVarsGet()
   }
   return (
-    <div className="Photo" onClick={handleMouseClick} >
+    <div className="Photo" onClick={handleMouseClick} ref={photo} >
       <div className='wally'></div>
         Photo goes here!
     </div>
