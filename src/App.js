@@ -19,7 +19,7 @@ firebase.initializeApp({
 const firestore = firebase.firestore();
 
 function App() {
-  const [mousePos,setMousePos]= useState([]);
+  const [mousePos,setMousePos]= useState(0);
 
   return (
     <div className="App">
@@ -49,10 +49,9 @@ function App() {
             mouseCircle.style.top = revisedMousePosY + 'px';
             mouseCircle.style.left = revisedMousePosX + 'px';            
           }
-
-          setMousePos([revisedMousePosX,revisedMousePosY]);
         }
         delayMouseFollow();
+        setMousePos([revisedMousePosX,revisedMousePosY]);
         })
       }
 
