@@ -20,6 +20,8 @@ const firestore = firebase.firestore();
 
 function App() {
   const [mousePos,setMousePos]= useState(0);
+  const [startTime,setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
 
   return (
     <div className="App">
@@ -31,35 +33,50 @@ function App() {
           let mousePosX = 0, mousePosY = 0,
           mouseCircle = document.getElementById('mouse-circle');
 
-        document.onmousemove = (e) => {
-          mousePosX = e.pageX;
-          mousePosY = e.pageY;
-        }
-
-        let delay = 6,
-        revisedMousePosX = 0,
-        revisedMousePosY = 0;
-        function delayMouseFollow() {
-          requestAnimationFrame(delayMouseFollow);
-
-          revisedMousePosX += (mousePosX - revisedMousePosX) / delay;
-          revisedMousePosY += (mousePosY - revisedMousePosY) / delay; 
-
-          if(mouseCircle){
-            mouseCircle.style.top = revisedMousePosY + 'px';
-            mouseCircle.style.left = revisedMousePosX + 'px';            
+          document.onmousemove = (e) => {
+            mousePosX = e.pageX;
+            mousePosY = e.pageY;
           }
-        }
-        delayMouseFollow();
-        setMousePos([revisedMousePosX,revisedMousePosY]);
+
+          let delay = 6,
+          revisedMousePosX = 0,
+          revisedMousePosY = 0;
+          function delayMouseFollow() {
+            requestAnimationFrame(delayMouseFollow);
+
+            revisedMousePosX += (mousePosX - revisedMousePosX) / delay;
+            revisedMousePosY += (mousePosY - revisedMousePosY) / delay; 
+
+            if(mouseCircle){
+              mouseCircle.style.top = revisedMousePosY + 'px';
+              mouseCircle.style.left = revisedMousePosX + 'px';            
+            }
+          }
+          delayMouseFollow();
+          setMousePos([revisedMousePosX,revisedMousePosY]);
         })
+      }
+      {
+        window.addEventListener('load',(e)=>{
+          setStartTime(new Date());
+        })
+      }
+      {
+        window.addEventListener('finish',(e)=>{
+          console.log("got here")
+          if(endTime !== 0 && startTime !== 0){
+            console.log(endTime-startTime)
+          }else{
+            console.log("something wrong")
+          }
+        },{once:true})
       }
 
       <header className="App-header">
         LMAO
         <div className='img-container'>
           image goes here - with logic and stuff
-          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} firestore={firestore}/>
+          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} firestore={firestore} setEndTime={setEndTime}/>
         </div>
       </header>
     </div>

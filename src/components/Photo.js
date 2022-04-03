@@ -13,12 +13,13 @@ function Photo(props) {
   const wallyLocation = props.firestore.collection("location");
   const [location] = useCollectionData(wallyLocation);
   const photo = useRef(null)
+  let alreadyHit = false;
 
+  /*
   function photoVarsGet(){
-    console.log(photo.current);
     let photoStyles = getComputedStyle(photo.current.querySelector(".wally"));
-    console.log(photoStyles);
   }
+  */
   function photoVarsSet(bool){
     const wallySelector =  photo.current.querySelector(".wally");
     if(bool){
@@ -49,20 +50,36 @@ function Photo(props) {
 
 
     //collision detection could be viable here https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection
-    collisionDetection(currentPosition);
+    if(alreadyHit){
+      console.log("already hit")
+      if(!collisionDetection(currentPosition)){
+        document.location.reload();
+      }      
+    }
+    else{
+      console.log("not hit")
+      if(collisionDetection(currentPosition)){
+        props.setEndTime(new Date());
+        alreadyHit = true;
+        event.target.dispatchEvent(new CustomEvent('finish',{
+          bubbles:true
+        }));
+      }
+    }
   }
   function collisionDetection(mousePos){
     let offset = parseInt(window.getComputedStyle(document.querySelector(".App").parentElement).getPropertyValue('--offset').match(/\d/g).join(""));
+    //photoVarsGet();
     if(mousePos[0]+offset>wally.x && mousePos[0]-offset<wally.x+wally.width && mousePos[1]+offset>wally.y && mousePos[1]-offset<wally.y+wally.height){
       //hit wally
       console.log("wally hit");
       photoVarsSet(1);
-
+      return true;
     }else{
       console.log("missed");
       photoVarsSet(0);
+      return false;
     }
-    photoVarsGet()
   }
   return (
     <div className="Photo" onClick={handleMouseClick} ref={photo} >
