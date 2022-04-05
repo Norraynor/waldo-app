@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Photo from "./components/Photo.js";
 
@@ -21,15 +21,30 @@ const firestore = firebase.firestore();
 function App() {
   const [mousePos,setMousePos]= useState(0);
   const [startTime,setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
 
+  function calculateScore(start,end){
+    return 60000-(end-start);
+  }
+  function handleLoad(event){
+    console.log("page fully loaded -time started")
+    setStartTime(new Date());
+    window.removeEventListener('load',handleLoad)
+  }
+  window.addEventListener('load',handleLoad)
+  window.addEventListener('finish',(e)=>{
+    if(startTime !== 0 && e.detail.endTime !== 0){
+      console.log(calculateScore(startTime,e.detail.endTime))
+    }else{
+      console.log("something wrong")
+    }
+  },{once:true})
   return (
     <div className="App">
       <div id="mouse-circle"></div>
 
       {
         //for testing mouse radius
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', (e) => {
           let mousePosX = 0, mousePosY = 0,
           mouseCircle = document.getElementById('mouse-circle');
 
@@ -54,29 +69,16 @@ function App() {
           }
           delayMouseFollow();
           setMousePos([revisedMousePosX,revisedMousePosY]);
+          console.log("fired again?")
         })
       }
-      {
-        window.addEventListener('load',(e)=>{
-          setStartTime(new Date());
-        })
-      }
-      {
-        window.addEventListener('finish',(e)=>{
-          console.log("got here")
-          if(endTime !== 0 && startTime !== 0){
-            console.log(endTime-startTime)
-          }else{
-            console.log("something wrong")
-          }
-        },{once:true})
-      }
+      
 
       <header className="App-header">
         LMAO
         <div className='img-container'>
           image goes here - with logic and stuff
-          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} firestore={firestore} setEndTime={setEndTime}/>
+          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} firestore={firestore} setStartTime={setStartTime}/>
         </div>
       </header>
     </div>

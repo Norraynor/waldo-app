@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import './Photo.css';
 
@@ -43,11 +43,6 @@ function Photo(props) {
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
     let currentPosition = [x,y];
-    console.log(currentPosition);
-    console.log(rect)
-    console.log(location)
-    console.log(wally);
-
 
     //collision detection could be viable here https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection
     if(alreadyHit){
@@ -59,10 +54,14 @@ function Photo(props) {
     else{
       console.log("not hit")
       if(collisionDetection(currentPosition)){
-        props.setEndTime(new Date());
         alreadyHit = true;
+        console.log("event goes")
         event.target.dispatchEvent(new CustomEvent('finish',{
-          bubbles:true
+          bubbles:true,
+          cancelable:true,
+          detail:{
+            endTime: new Date()
+          }
         }));
       }
     }
