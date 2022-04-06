@@ -26,18 +26,16 @@ function App() {
     return 60000-(end-start);
   }
   function handleLoad(event){
-    console.log("page fully loaded -time started")
+    console.log("page fully loaded -time started");
     setStartTime(new Date());
-    window.removeEventListener('load',handleLoad)
   }
-  window.addEventListener('load',handleLoad)
-  window.addEventListener('finish',(e)=>{
-    if(startTime !== 0 && e.detail.endTime !== 0){
-      console.log(calculateScore(startTime,e.detail.endTime))
-    }else{
-      console.log("something wrong")
+  function handleFinish(event){
+    if(startTime !== 0 && event.detail.endTime !== 0){
+      console.log(calculateScore(startTime,event.detail.endTime))
     }
-  },{once:true})
+  }
+  window.addEventListener('load',handleLoad,{once:true})
+  window.addEventListener('finish',handleFinish,{once:true})
   return (
     <div className="App">
       <div id="mouse-circle"></div>

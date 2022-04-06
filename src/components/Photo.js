@@ -45,25 +45,16 @@ function Photo(props) {
     let currentPosition = [x,y];
 
     //collision detection could be viable here https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection
-    if(alreadyHit){
-      console.log("already hit")
-      if(!collisionDetection(currentPosition)){
-        document.location.reload();
-      }      
-    }
-    else{
-      console.log("not hit")
-      if(collisionDetection(currentPosition)){
-        alreadyHit = true;
-        console.log("event goes")
-        event.target.dispatchEvent(new CustomEvent('finish',{
-          bubbles:true,
-          cancelable:true,
-          detail:{
-            endTime: new Date()
-          }
-        }));
-      }
+    
+    if(collisionDetection(currentPosition)){
+      console.log("event goes")
+      event.target.dispatchEvent(new CustomEvent('finish',{
+        bubbles:true,
+        cancelable:true,
+        detail:{
+          endTime: new Date()
+        }
+      }));      
     }
   }
   function collisionDetection(mousePos){
