@@ -34,6 +34,7 @@ function App() {
       console.log(calculateScore(startTime,event.detail.endTime))
     }
   }
+  console.log("how many")
   window.addEventListener('load',handleLoad,{once:true})
   window.addEventListener('finish',handleFinish,{once:true})
   return (
