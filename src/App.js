@@ -19,20 +19,32 @@ firebase.initializeApp({
 const firestore = firebase.firestore();
 
 function App() {
+  const wallyLocation = firestore.collection("location");
   const [mousePos,setMousePos]= useState(0);
   const [startTime,setStartTime] = useState(0);
 
   function calculateScore(start,end){
-    return 60000-(end-start);
+    return 61000-(end-start);
+  }
+  function calculateTimeInSeconds(start,end){
+    return (end-start)/1000;
   }
   function handleLoad(event){
     console.log("page fully loaded -time started");
     setStartTime(new Date());
+
+    changePara("ready");
+  }
+  function changePara(text){
+    const paraSelect = document.querySelector(".ready-indicator");
+    paraSelect.textContent = text;
   }
   function handleFinish(event){
     if(startTime !== 0 && event.detail.endTime !== 0){
       console.log(calculateScore(startTime,event.detail.endTime))
+      changePara("FOUND! Your score: "+calculateScore(startTime,event.detail.endTime).toString())
     }
+    
   }
   console.log("how many")
   window.addEventListener('load',handleLoad,{once:true})
@@ -43,9 +55,9 @@ function App() {
 
       {
         //for testing mouse radius
-        document.addEventListener('DOMContentLoaded', (e) => {
-          let mousePosX = 0, mousePosY = 0,
-          mouseCircle = document.getElementById('mouse-circle');
+        document.addEventListener('load', (e) => {
+          let mousePosX = 0, mousePosY = 0;
+          //mouseCircle = document.getElementById('mouse-circle');
 
           document.onmousemove = (e) => {
             mousePosX = e.pageX;
@@ -60,11 +72,12 @@ function App() {
 
             revisedMousePosX += (mousePosX - revisedMousePosX) / delay;
             revisedMousePosY += (mousePosY - revisedMousePosY) / delay; 
-
+            /*
             if(mouseCircle){
               mouseCircle.style.top = revisedMousePosY + 'px';
               mouseCircle.style.left = revisedMousePosX + 'px';            
             }
+            */
           }
           delayMouseFollow();
           setMousePos([revisedMousePosX,revisedMousePosY]);
@@ -74,10 +87,9 @@ function App() {
       
 
       <header className="App-header">
-        LMAO
+        <p className='ready-indicator' >wait</p>
         <div className='img-container'>
-          image goes here - with logic and stuff
-          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} firestore={firestore} setStartTime={setStartTime}/>
+          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} wallyLocation={wallyLocation}/>
         </div>
       </header>
     </div>

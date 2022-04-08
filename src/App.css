@@ -43,7 +43,7 @@
 
 /**
  * Radial cursor
- */
+ 
  #mouse-circle {
   position: absolute;
   width: calc(2*var(--offset));
@@ -53,4 +53,10 @@
   border-radius: 50%;
   pointer-events: none;
   z-index: 10;
+}
+ */
+.ready-indicator{
+  margin:0;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }

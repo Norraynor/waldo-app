@@ -13,6 +13,7 @@
     --top:0px;
     --width:0px;
     --height:0px;
+    --border:0px;
     background-color: rgb(219, 35, 35,0.3);
     position: absolute;
     left: var(--left);
@@ -21,6 +22,6 @@
     height: var(--height);
     display: block;
     border-style: solid;
-    border-width: 2px;
+    border-width: var(--border);
     border-color: black;
 }

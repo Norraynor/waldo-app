@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import './Photo.css';
 
@@ -10,10 +10,9 @@ import './Photo.css';
 }*/
 function Photo(props) { 
   let wally;
-  const wallyLocation = props.firestore.collection("location");
+  const wallyLocation = props.wallyLocation;
   const [location] = useCollectionData(wallyLocation);
   const photo = useRef(null)
-  let alreadyHit = false;
 
   /*
   function photoVarsGet(){
@@ -27,11 +26,14 @@ function Photo(props) {
       wallySelector.style.setProperty('--left',`${wally.x}px`);
       wallySelector.style.setProperty('--width',`${wally.width}px`);
       wallySelector.style.setProperty('--height',`${wally.height}px`);
+      wallySelector.style.setProperty('--border',`2px`);
+
     }else{
       wallySelector.style.setProperty('--top',`0px`);
       wallySelector.style.setProperty('--left',`0px`);
       wallySelector.style.setProperty('--width',`0px`);
       wallySelector.style.setProperty('--height',`0px`);}
+      wallySelector.style.setProperty('--border',`0px`);
   }
 
   function handleMouseClick(event){
@@ -74,7 +76,6 @@ function Photo(props) {
   return (
     <div className="Photo" onClick={handleMouseClick} ref={photo} >
       <div className='wally'></div>
-        Photo goes here!
     </div>
   );
 }
