@@ -1,12 +1,15 @@
 
 
 .Photo{
+    --visibility:hidden;
+
     width: 70vw;
     height: calc((1080/1920)*70vw);
     
     background-image: url(../images/waldo_beach.jfif);
     background-size: cover;
     position: relative;
+    visibility: var(--visibility);
 }
 .wally{
     --left:0px;

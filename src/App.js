@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Photo from "./components/Photo.js";
 
@@ -20,11 +20,13 @@ const firestore = firebase.firestore();
 
 function App() {
   const wallyLocation = firestore.collection("location");
+  const leaderboards = firestore.collection("leaderboards");
+  const leaderboardQuery = leaderboards.orderBy('score').limit(10);
   const [mousePos,setMousePos]= useState(0);
   const [startTime,setStartTime] = useState(0);
 
-  function calculateScore(start,end){
-    return 61000-(end-start);
+  function calculateScore(start,end,clickCount){
+    return 61000-(end-start)-(clickCount*1000);
   }
   function calculateTimeInSeconds(start,end){
     return (end-start)/1000;
@@ -32,22 +34,36 @@ function App() {
   function handleLoad(event){
     console.log("page fully loaded -time started");
     setStartTime(new Date());
-
     changePara("ready");
+    document.querySelector(".Photo").style.setProperty('--visibility',"visible");
   }
   function changePara(text){
     const paraSelect = document.querySelector(".ready-indicator");
     paraSelect.textContent = text;
   }
-  function handleFinish(event){
-    if(startTime !== 0 && event.detail.endTime !== 0){
-      console.log(calculateScore(startTime,event.detail.endTime))
-      changePara("FOUND! Your score: "+calculateScore(startTime,event.detail.endTime).toString())
+  async function handleFinish(event){
+    let score = 0;
+    //---need to fix data send to firestore ---
+    const sendData = async(e)=>{
+      await leaderboards.add({
+        name: prompt("Enter your name for leaderboard"),
+        score: score,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      })
     }
-    
+    if(startTime !== 0 && event.detail.endTime !== 0){
+      score = calculateScore(startTime,event.detail.endTime,event.detail.clickCount)
+      console.log(score)
+      changePara("FOUND! Your score: "+score.toString()+" Miss clicked: "+event.detail.clickCount.toString() + "times");
+      const docRef = await sendData(event);
+      console.log(docRef);
+    }
+  }
+  function handleReload(event){
+    window.location.reload();
   }
   console.log("how many")
-  window.addEventListener('load',handleLoad,{once:true})
+  //window.addEventListener('load',handleLoad,{once:true})
   window.addEventListener('finish',handleFinish,{once:true})
   return (
     <div className="App">
@@ -55,7 +71,8 @@ function App() {
 
       {
         //for testing mouse radius
-        document.addEventListener('load', (e) => {
+        window.addEventListener('load', (e) => {
+          handleLoad(e);
           let mousePosX = 0, mousePosY = 0;
           //mouseCircle = document.getElementById('mouse-circle');
 
@@ -87,6 +104,7 @@ function App() {
       
 
       <header className="App-header">
+        <button onClick={handleReload}>Reset</button>
         <p className='ready-indicator' >wait</p>
         <div className='img-container'>
           <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} wallyLocation={wallyLocation}/>

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import './Photo.css';
 
@@ -13,6 +13,7 @@ function Photo(props) {
   const wallyLocation = props.wallyLocation;
   const [location] = useCollectionData(wallyLocation);
   const photo = useRef(null)
+  const [clickCount,setClickCount] = useState(0);
 
   /*
   function photoVarsGet(){
@@ -37,11 +38,9 @@ function Photo(props) {
   }
 
   function handleMouseClick(event){
+    setClickCount(clickCount+1);
     let rect = event.target.getBoundingClientRect();
-    //console.log(wallyLocation);
-    //console.log(location);
     wally = location[0];
-    //console.log(event.clientX,event.clientY,event.pageX,event.pageY,event.screenX,event.screenY,rect)
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
     let currentPosition = [x,y];
@@ -54,7 +53,8 @@ function Photo(props) {
         bubbles:true,
         cancelable:true,
         detail:{
-          endTime: new Date()
+          endTime: new Date(),
+          clickCount: clickCount
         }
       }));      
     }
