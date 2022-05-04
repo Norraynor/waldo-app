@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Photo from "./components/Photo.js";
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import { addDoc, collection, getFirestore } from 'firebase/firestore';
 
 //import {useCollectionData} from 'react-firebase-hooks/firestore';
 
@@ -24,12 +25,14 @@ function App() {
   const leaderboardQuery = leaderboards.orderBy('score').limit(10);
   const [mousePos,setMousePos]= useState(0);
   const [startTime,setStartTime] = useState(0);
+  const [elapsedTime,setElapsedTime] = useState(0);
+  let score = 0;
 
   function calculateScore(start,end,clickCount){
     return 61000-(end-start)-(clickCount*1000);
   }
   function calculateTimeInSeconds(start,end){
-    return (end-start)/1000;
+    return ((end-start)/1000)
   }
   function handleLoad(event){
     console.log("page fully loaded -time started");
@@ -37,31 +40,36 @@ function App() {
     changePara("ready");
     document.querySelector(".Photo").style.setProperty('--visibility',"visible");
   }
+
   function changePara(text){
     const paraSelect = document.querySelector(".ready-indicator");
     paraSelect.textContent = text;
   }
   async function handleFinish(event){
-    let score = 0;
-    //---need to fix data send to firestore ---
-    const sendData = async(e)=>{
-      await leaderboards.add({
-        name: prompt("Enter your name for leaderboard"),
-        score: score,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-    }
     if(startTime !== 0 && event.detail.endTime !== 0){
-      score = calculateScore(startTime,event.detail.endTime,event.detail.clickCount)
-      console.log(score)
+      score = calculateScore(startTime,event.detail.endTime,event.detail.clickCount);
       changePara("FOUND! Your score: "+score.toString()+" Miss clicked: "+event.detail.clickCount.toString() + "times");
-      const docRef = await sendData(event);
-      console.log(docRef);
     }
   }
   function handleReload(event){
     window.location.reload();
   }
+  function getScore(){
+    return score;
+  }
+  async function saveMessage(score) {
+  // Add a new message entry to the Firebase database.
+  try {
+    await addDoc(collection(getFirestore(), 'leaderboards'), {
+      name: await prompt("Enter your name for leaderboard"),
+      score: await getScore(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+  catch(error) {
+    console.error('Error writing new message to Firebase Database', error);
+  }
+}
   console.log("how many")
   //window.addEventListener('load',handleLoad,{once:true})
   window.addEventListener('finish',handleFinish,{once:true})
@@ -107,7 +115,7 @@ function App() {
         <button onClick={handleReload}>Reset</button>
         <p className='ready-indicator' >wait</p>
         <div className='img-container'>
-          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} wallyLocation={wallyLocation}/>
+          <Photo mousePosX={mousePos[0]} mousePosY={mousePos[1]} wallyLocation={wallyLocation} saveData={saveMessage} score={score}/>
         </div>
       </header>
     </div>

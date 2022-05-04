@@ -49,6 +49,8 @@ function Photo(props) {
     
     if(collisionDetection(currentPosition)){
       console.log("event goes")
+
+      props.saveData(props.score);
       event.target.dispatchEvent(new CustomEvent('finish',{
         bubbles:true,
         cancelable:true,
